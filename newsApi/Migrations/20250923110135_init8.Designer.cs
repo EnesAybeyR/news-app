@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using newsApi.Data;
 
@@ -10,9 +11,11 @@ using newsApi.Data;
 namespace newsApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250923110135_init8")]
+    partial class init8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
@@ -73,8 +76,8 @@ namespace newsApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("CategoryId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid?>("CategoryId")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("CountryName")
                         .IsRequired()
@@ -95,8 +98,6 @@ namespace newsApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
-
                     b.HasIndex("EditorId");
 
                     b.ToTable("News");
@@ -104,11 +105,6 @@ namespace newsApi.Migrations
 
             modelBuilder.Entity("newsApi.Entities.News", b =>
                 {
-                    b.HasOne("newsApi.Entities.Category", null)
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("newsApi.Entities.Admin", null)
                         .WithMany()
                         .HasForeignKey("EditorId")

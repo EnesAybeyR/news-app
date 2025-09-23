@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using newsApi.Data;
 
@@ -10,9 +11,11 @@ using newsApi.Data;
 namespace newsApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250923105247_init7")]
+    partial class init7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
@@ -73,7 +76,13 @@ namespace newsApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("CategoryId")
+                    b.Property<Guid>("AdminId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("CategoryId1")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("CountryName")
@@ -83,7 +92,7 @@ namespace newsApi.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("EditorId")
+                    b.Property<Guid>("EditorId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("EntryCount")
@@ -95,24 +104,30 @@ namespace newsApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("AdminId");
 
-                    b.HasIndex("EditorId");
+                    b.HasIndex("CategoryId1");
 
                     b.ToTable("News");
                 });
 
             modelBuilder.Entity("newsApi.Entities.News", b =>
                 {
-                    b.HasOne("newsApi.Entities.Category", null)
+                    b.HasOne("newsApi.Entities.Admin", "Admin")
                         .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("AdminId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("newsApi.Entities.Admin", null)
+                    b.HasOne("newsApi.Entities.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("EditorId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("CategoryId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Admin");
+
+                    b.Navigation("Category");
                 });
 #pragma warning restore 612, 618
         }
