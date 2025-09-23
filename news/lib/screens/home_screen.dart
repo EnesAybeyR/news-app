@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:news/models/news.dart';
+import 'package:news/screens/category_screen.dart';
 import 'package:news/screens/news_detail_screen.dart';
 import 'package:news/widgets/all_item_widget.dart';
+import 'package:news/widgets/custom_bottom_nav_bar.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   static HomeScreen builder(BuildContext context, GoRouterState state) =>
@@ -40,6 +42,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: CustomBottomNavBar(),
       backgroundColor: col,
       body: SizedBox(
         height: MediaQuery.sizeOf(context).height,
@@ -63,8 +66,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         GestureDetector(
-                          onTap: () {},
-                          child: Text(tabbars[index]),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CategoryScreen(
+                                  categoryName: tabbars[index],
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            tabbars[index],
+                            style: TextStyle(
+                              fontWeight: tabbars[index] == "All"
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                            ),
+                          ),
                         ),
                         if (index != tabbars.length - 1) Text(' | '),
                       ],

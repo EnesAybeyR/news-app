@@ -6,8 +6,8 @@ class CustomAppBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      child: Column(
+    return AppBar(
+      title: Column(
         children: [
           SizedBox(height: 5),
           Stack(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:news/models/news.dart';
-import 'package:news/widgets/custom_app_bar.dart';
 
 class NewsDetailScreen extends ConsumerStatefulWidget {
   const NewsDetailScreen({super.key, required this.new1});
@@ -31,11 +30,14 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
       remain = (dur.inDays / 365).toString() + ' year ago';
     }
     return Scaffold(
+      appBar: AppBar(
+        title: Text('The Daily World News', style: TextStyle(fontSize: 24)),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomAppBar(),
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
