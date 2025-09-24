@@ -1,5 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,6 +21,19 @@ class AllItemWidget extends ConsumerStatefulWidget {
 class _AllItemWidgetState extends ConsumerState<AllItemWidget> {
   @override
   Widget build(BuildContext context) {
+    String remain = '';
+    final Duration dur = DateTime.now().difference(widget.datetime);
+    if (dur.inSeconds < 60) {
+      remain = 'Now';
+    } else if (dur.inMinutes < 60) {
+      remain = '${dur.inMinutes.toInt().toString()} minutes ago';
+    } else if (dur.inHours < 24) {
+      remain = '${dur.inHours.toInt().toString()} hours ago';
+    } else if (dur.inDays < 365) {
+      remain = '${dur.inDays.toInt().toString()} days ago';
+    } else {
+      remain = '${(dur.inDays / 365).toInt().toString()} year ago';
+    }
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Container(
@@ -41,7 +52,7 @@ class _AllItemWidgetState extends ConsumerState<AllItemWidget> {
                 topRight: Radius.circular(12),
               ),
               child: Image.network(
-                'https://picsum.photos/1920/1080',
+                widget.imagePath,
                 width: double.infinity,
                 height: 220,
                 fit: BoxFit.fill,
@@ -52,9 +63,16 @@ class _AllItemWidgetState extends ConsumerState<AllItemWidget> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Şanlıurfa'yı ziyaret eden Japon Prensesi Mikasa'nın ilk durağı Balıklıgöl oldu",
+                  widget.header,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: Text("$remain / ${widget.country}"),
               ),
             ),
           ],

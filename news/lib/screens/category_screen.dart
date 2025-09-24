@@ -1,34 +1,40 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:news/models/news.dart';
+import 'package:news/models/category.dart';
+import 'package:news/provider/newProviders/news_provider.dart';
 import 'package:news/screens/news_detail_screen.dart';
 import 'package:news/widgets/all_item_widget.dart';
 
 class CategoryScreen extends ConsumerStatefulWidget {
-  const CategoryScreen({required this.categoryName, super.key});
-  final String categoryName;
+  const CategoryScreen({required this.category, super.key});
+  final Category category;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _CategoryScreenState();
 }
 
 class _CategoryScreenState extends ConsumerState<CategoryScreen> {
-  final News new1 = News(
-    id: 1,
-    headline: 'US blocks UN call for Gaza ceasefire for sixth time',
-    createDate: DateTime(2024, 12, 24),
-    editorId: 1,
-    countryName: 'Turkey',
-    topicId: 1,
-    entryCount: 0,
-  );
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(newsCategoryScreenProviderNotifier.notifier)
+          .getNewsByCategory(ref, widget.category.id);
+    });
+  }
+
   final Color col = Color.fromARGB(255, 240, 238, 242);
   @override
   Widget build(BuildContext context) {
+    final news = ref.watch(newsCategoryScreenProviderNotifier);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.categoryName, style: TextStyle(fontSize: 24)),
+        title: Text(
+          widget.category.categoryName,
+          style: TextStyle(fontSize: 24),
+        ),
         automaticallyImplyLeading: true,
         centerTitle: true,
         backgroundColor: col,
@@ -38,29 +44,44 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
         child: Column(
           children: [
             SizedBox(height: 10),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      //context.push(RouteLocation.detail);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => NewsDetailScreen(new1: new1),
+            news.when(
+              data: (newsList) {
+                if (newsList.isEmpty) {
+                  return Center(
+                    child: Text(
+                      "There is no news about this category yet",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  );
+                }
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: newsList.length,
+                    itemBuilder: (context, index) {
+                      var newItem = newsList[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  NewsDetailScreen(new1: newItem),
+                            ),
+                          );
+                        },
+                        child: AllItemWidget(
+                          imagePath: newItem.images[0].imagePath,
+                          header: newItem.headline,
+                          datetime: newItem.createDate,
+                          country: newItem.countryName,
                         ),
                       );
                     },
-                    child: AllItemWidget(
-                      imagePath: 'https://picsum.photos/200/300',
-                      header: '',
-                      datetime: DateTime(1998, 12, 21, 12, 44, 12, 12, 12),
-                      country: '',
-                    ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
+              error: (error, stack) => Center(child: Text('Error: $error')),
+              loading: () => const Center(child: CircularProgressIndicator()),
             ),
           ],
         ),

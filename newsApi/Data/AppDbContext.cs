@@ -14,7 +14,7 @@ public class AppDbContext : DbContext
     public DbSet<Category> Categories { get; set; }
     public DbSet<Admin> Admins { get; set; }
     public DbSet<News> News { get; set; }
-    public DbSet<NewsContent> newsContents{ get; set; }
+    public DbSet<NewsContent> NewsContents{ get; set; }
     public DbSet<Image> Images { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

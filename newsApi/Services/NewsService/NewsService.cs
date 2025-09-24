@@ -60,9 +60,21 @@ public class NewsService(AppDbContext context) : INewsService
     }
     public async Task<List<News>> GetNewsAsync()
     {
-        var news = await context.News.Include(c => c.Images).Include(c=> c.NewsContents).ToListAsync();
+        var news = await context.News.Include(c => c.Images).Include(c => c.NewsContents).ToListAsync();
         return news;
     }
-    
+
+    public async Task<List<News>> GetNewsByCategoryAsync(int CategoryId)
+    {
+        var news = await context.News.Include(c => c.Images).Include(c => c.NewsContents).Where(c => c.CategoryId == CategoryId).ToListAsync();
+        return news;
+    }
+
+    public async Task<String> GetEditorNameAsync(Guid EditorId)
+    {
+        var editor = await context.Admins.FirstOrDefaultAsync(c => c.Id == EditorId);
+        var editorName = editor.Name + " " + editor.Surname;
+        return editorName;
+    }
     
 }

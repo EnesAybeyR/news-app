@@ -8,7 +8,10 @@ namespace newsApi.Services.NewsService;
 public interface INewsService
 {
     Task<News?> CreateNew(NewsDto request, Guid EditorId);
-    Task<bool> DeleteNew(Guid newId); 
+    Task<bool> DeleteNew(Guid newId);
 
     Task<List<News>> GetNewsAsync();
+    Task<List<News>> GetNewsByCategoryAsync(int CategoryId);
+    
+    Task<String> GetEditorNameAsync(Guid EditorId);
 }

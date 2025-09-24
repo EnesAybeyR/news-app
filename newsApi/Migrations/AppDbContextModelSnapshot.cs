@@ -48,7 +48,7 @@ namespace newsApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Admins");
+                    b.ToTable("Admins", (string)null);
                 });
 
             modelBuilder.Entity("newsApi.Entities.Category", b =>
@@ -64,7 +64,7 @@ namespace newsApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("newsApi.Entities.Image", b =>
@@ -95,7 +95,7 @@ namespace newsApi.Migrations
 
                     b.HasIndex("NewId");
 
-                    b.ToTable("Images");
+                    b.ToTable("Images", (string)null);
                 });
 
             modelBuilder.Entity("newsApi.Entities.News", b =>
@@ -130,7 +130,7 @@ namespace newsApi.Migrations
 
                     b.HasIndex("EditorId");
 
-                    b.ToTable("News");
+                    b.ToTable("News", (string)null);
                 });
 
             modelBuilder.Entity("newsApi.Entities.NewsContent", b =>
@@ -157,7 +157,7 @@ namespace newsApi.Migrations
 
                     b.HasIndex("NewId");
 
-                    b.ToTable("newsContents");
+                    b.ToTable("newsContents", (string)null);
                 });
 
             modelBuilder.Entity("newsApi.Entities.Image", b =>

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:news/models/news.dart';
+import 'package:news/provider/categoryProvider.dart';
+import 'package:news/provider/newProviders/news_provider.dart';
 import 'package:news/screens/category_screen.dart';
 import 'package:news/screens/news_detail_screen.dart';
 import 'package:news/widgets/all_item_widget.dart';
@@ -17,30 +18,21 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  final tabbars = [
-    'All',
-    'News',
-    'Earth',
-    'Businnes',
-    'Innovation',
-    'Culture',
-    'Arts',
-    'Travel',
-    'Sport',
-  ];
-  final News new1 = News(
-    id: 1,
-    headline: 'US blocks UN call for Gaza ceasefire for sixth time',
-    createDate: DateTime(2024, 12, 24),
-    editorId: 1,
-    countryName: 'Turkey',
-    topicId: 1,
-    entryCount: 0,
-  );
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(newsProviderNotifier.notifier).getNews(ref);
+      ref.read(categoryProviderNotifier.notifier).getCategories(ref);
+    });
+  }
+
   final Color col = Color.fromARGB(255, 240, 238, 242);
 
   @override
   Widget build(BuildContext context) {
+    final news = ref.watch(newsProviderNotifier);
+    final categories = ref.watch(categoryProviderNotifier);
     return Scaffold(
       bottomNavigationBar: CustomBottomNavBar(),
       backgroundColor: col,
@@ -57,65 +49,83 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               height: 30,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: tabbars.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CategoryScreen(
-                                  categoryName: tabbars[index],
+                child: categories.when(
+                  data: (newCategories) {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: newCategories.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                if (newCategories[index].categoryName !=
+                                    "All") {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => CategoryScreen(
+                                        category: newCategories[index],
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Text(
+                                newCategories[index].categoryName,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight:
+                                      newCategories[index].categoryName == "All"
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
                                 ),
                               ),
-                            );
-                          },
-                          child: Text(
-                            tabbars[index],
-                            style: TextStyle(
-                              fontWeight: tabbars[index] == "All"
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
                             ),
-                          ),
-                        ),
-                        if (index != tabbars.length - 1) Text(' | '),
-                      ],
+                            if (index != newCategories.length - 1) Text(' | '),
+                          ],
+                        );
+                      },
                     );
                   },
+                  error: (error, stack) => Center(child: Text('Error: $error')),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
                 ),
               ),
             ),
-            SizedBox(height: 10),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 3,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      //context.push(RouteLocation.detail);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => NewsDetailScreen(new1: new1),
+            SizedBox(height: 4),
+            news.when(
+              data: (newsList) {
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: newsList.length,
+                    itemBuilder: (context, index) {
+                      var newItem = newsList[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  NewsDetailScreen(new1: newItem),
+                            ),
+                          );
+                        },
+                        child: AllItemWidget(
+                          imagePath: newItem.images[0].imagePath,
+                          header: newItem.headline,
+                          datetime: newItem.createDate,
+                          country: newItem.countryName,
                         ),
                       );
                     },
-                    child: AllItemWidget(
-                      imagePath: 'https://picsum.photos/200/300',
-                      header: '',
-                      datetime: DateTime(1998, 12, 21, 12, 44, 12, 12, 12),
-                      country: '',
-                    ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
+              error: (error, stack) => Center(child: Text('Error: $error')),
+              loading: () => const Center(child: CircularProgressIndicator()),
             ),
           ],
         ),
@@ -123,3 +133,111 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 }
+
+
+
+
+// ListView.builder(
+//                   shrinkWrap: true,
+//                   itemCount: tabbars.length,
+//                   scrollDirection: Axis.horizontal,
+//                   itemBuilder: (context, index) {
+//                     return Row(
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       children: [
+//                         GestureDetector(
+//                           onTap: () {
+//                             Navigator.push(
+//                               context,
+//                               MaterialPageRoute(
+//                                 builder: (context) => CategoryScreen(
+//                                   categoryName: tabbars[index],
+//                                 ),
+//                               ),
+//                             );
+//                           },
+//                           child: Text(
+//                             tabbars[index],
+//                             style: TextStyle(
+//                               fontWeight: tabbars[index] == "All"
+//                                   ? FontWeight.bold
+//                                   : FontWeight.normal,
+//                             ),
+//                           ),
+//                         ),
+//                         if (index != tabbars.length - 1) Text(' | '),
+//                       ],
+//                     );
+//                   },
+//                 ),
+
+
+
+
+
+
+
+// news != AsyncValue.data([])
+//         ? Scaffold(
+//             body: SizedBox(
+//               height: MediaQuery.sizeOf(context).height,
+//               width: MediaQuery.sizeOf(context).width,
+//               child: Column(
+//                 children: [
+//                   news.when(
+//                     data: (newsList) {
+//                       return SingleChildScrollView(
+//                         child: Column(
+//                           children: [
+//                             SizedBox(
+//                               height: MediaQuery.sizeOf(context).height,
+//                               child: ListView.builder(
+//                                 shrinkWrap: true,
+//                                 itemCount: newsList.length,
+//                                 itemBuilder: (context, index) {
+//                                   final news = newsList[index];
+//                                   return Column(
+//                                     children: [
+//                                       ListTile(title: Text(news.headline)),
+//                                       ListTile(title: Text(news.countryName)),
+//                                       ListTile(title: Text(news.editorId)),
+//                                       ListTile(title: Text(news.id)),
+//                                       ListTile(
+//                                         title: Text(news.categoryId.toString()),
+//                                       ),
+//                                       ListTile(
+//                                         title: Text(news.createDate.toString()),
+//                                       ),
+//                                       ListTile(
+//                                         title: Text(news.entryCount.toString()),
+//                                       ),
+//                                       ListTile(
+//                                         title: Text(news.images[0].imageName),
+//                                       ),
+//                                       ListTile(
+//                                         title: Text(
+//                                           news.newContents[0].content,
+//                                         ),
+//                                       ),
+//                                       Text(
+//                                         "==================================",
+//                                       ),
+//                                     ],
+//                                   );
+//                                 },
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                       );
+//                     },
+//                     error: (error, stack) =>
+//                         Center(child: Text('Error: $error')),
+//                     loading: () =>
+//                         const Center(child: CircularProgressIndicator()),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           )
+//         : 

@@ -28,7 +28,7 @@ namespace newsApi.Controller
             }
             return Ok(result);
         }
-        [HttpDelete("/delete/{id}")]
+        [HttpDelete("delete/{id}")]
         [Authorize(Roles = "Admin,Editor")]
         public async Task<ActionResult> DeleteNews(Guid id)
         {
@@ -40,11 +40,28 @@ namespace newsApi.Controller
             return Ok("New deleted");
         }
 
-        [HttpGet("/getallnews")]
+        [HttpGet("getallnews")]
         public async Task<ActionResult<List<News>>> GetAllNews()
         {
             var result = await newsService.GetNewsAsync();
             return Ok(result);
         }
+        [HttpGet("getNewsByCategory/{id}")]
+        public async Task<ActionResult<News>> GetNewsByCategory(int id)
+        {
+            var result = await newsService.GetNewsByCategoryAsync(id);
+            return Ok(result);
+        }
+        [HttpGet("getName/{id}")]
+        public async Task<ActionResult<string>> GetName(string id)
+        {
+            var result = await newsService.GetEditorNameAsync(Guid.Parse(id));
+            if (result == null)
+            {
+                return Ok(" 312");
+            }
+            return Ok(result);
+        }
+        
     }
 }
