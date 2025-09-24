@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using newsApi.Data;
 
@@ -10,9 +11,11 @@ using newsApi.Data;
 namespace newsApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250923125039_init13")]
+    partial class init13
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
@@ -67,37 +70,6 @@ namespace newsApi.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("newsApi.Entities.Image", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Alt")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ImageName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ImagePath")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("NewId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NewId");
-
-                    b.ToTable("Images");
-                });
-
             modelBuilder.Entity("newsApi.Entities.News", b =>
                 {
                     b.Property<Guid>("Id")
@@ -150,7 +122,7 @@ namespace newsApi.Migrations
                     b.Property<Guid>("NewId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Order")
+                    b.Property<int>("order")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -158,15 +130,6 @@ namespace newsApi.Migrations
                     b.HasIndex("NewId");
 
                     b.ToTable("newsContents");
-                });
-
-            modelBuilder.Entity("newsApi.Entities.Image", b =>
-                {
-                    b.HasOne("newsApi.Entities.News", null)
-                        .WithMany("Images")
-                        .HasForeignKey("NewId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("newsApi.Entities.News", b =>
@@ -184,17 +147,17 @@ namespace newsApi.Migrations
 
             modelBuilder.Entity("newsApi.Entities.NewsContent", b =>
                 {
-                    b.HasOne("newsApi.Entities.News", null)
+                    b.HasOne("newsApi.Entities.News", "News")
                         .WithMany("NewsContents")
                         .HasForeignKey("NewId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("News");
                 });
 
             modelBuilder.Entity("newsApi.Entities.News", b =>
                 {
-                    b.Navigation("Images");
-
                     b.Navigation("NewsContents");
                 });
 #pragma warning restore 612, 618

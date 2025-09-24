@@ -1,4 +1,5 @@
 using System;
+using newsApi.Entities;
 
 namespace newsApi.Models;
 
@@ -9,5 +10,10 @@ public class NewsDto
     public string CountryName { get; set; } = string.Empty;
 
     public int EntryCount { get; set; } = 0;
-    
+
+    public int? CategoryId { get; set; }
+
+    public List<NewsContentsDto> NewsContentsDtos { get; set; } = new();
+
+    public List<ImageDto> ImagesDtos { get; set; } = new();
 }

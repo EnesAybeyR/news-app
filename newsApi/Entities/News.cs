@@ -15,5 +15,7 @@ public class News
     public Guid? EditorId { get; set; }
     public int? CategoryId { get; set; }
 
-
+    public List<NewsContent> NewsContents { get; set; } = new();
+    
+    public List<Image> Images { get; set; } = new();
 }

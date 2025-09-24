@@ -14,18 +14,36 @@ namespace newsApi.Controller
     {
         [HttpPost]
         [Authorize(Roles = "Editor,Admin")]
-        public async Task<ActionResult<News>> CreateNews(NewsDto request, int CategoryId)
+        public async Task<ActionResult<News>> CreateNews(NewsDto request)
         {
             var adminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (adminId == null)
             {
                 return BadRequest("You should sign in as a editor");
             }
-            var result = await newsService.CreateNew(request, CategoryId, Guid.Parse(adminId));
+            var result = await newsService.CreateNew(request, Guid.Parse(adminId));
             if (result == null)
             {
                 return BadRequest("Invalid inputs");
             }
+            return Ok(result);
+        }
+        [HttpDelete("/delete/{id}")]
+        [Authorize(Roles = "Admin,Editor")]
+        public async Task<ActionResult> DeleteNews(Guid id)
+        {
+            var result = await newsService.DeleteNew(id);
+            if (result == false)
+            {
+                return NotFound("New not found");
+            }
+            return Ok("New deleted");
+        }
+
+        [HttpGet("/getallnews")]
+        public async Task<ActionResult<List<News>>> GetAllNews()
+        {
+            var result = await newsService.GetNewsAsync();
             return Ok(result);
         }
     }

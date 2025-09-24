@@ -18,7 +18,7 @@ namespace newsApi.Controller
             _appDbContext = appDbContext;
         }
         [HttpGet]
-        public async Task<ActionResult<Category>> GetAllCategories()
+        public async Task<ActionResult<List<Category>>> GetAllCategories()
         {
             var categories = await _appDbContext.Categories.ToListAsync();
             return Ok(categories);
