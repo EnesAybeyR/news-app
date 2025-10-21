@@ -1,0 +1,27 @@
+@newsApi_HostAddress = http://localhost:5287
+
+GET {{newsApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+GET {{newsApi_HostAddress}}/api/category
+
+###
+POST {{newsApi_HostAddress}}/api/category
+Content-Type: application/json
+
+{
+    "CategoryName": "Business"
+}
+
+###
+POST {{newsApi_HostAddress}}/api/Auth/user/nfa
+Content-Type: application/json
+
+{
+    "UserName": "MemedoSaid",
+    "Password": "123"
+}
+
+###
+GET https://newsapi.org/v2/everything?q=keyword&apiKey=1440037de64546039059454bedb3d865
