@@ -36,7 +36,7 @@ ScaffoldingReadMe.txt
 # NuGet Symbol Packages
 *.snupkg
 
-appsettings.json
+.env
 
 # Others
 ~$*
