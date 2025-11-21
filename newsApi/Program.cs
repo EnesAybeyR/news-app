@@ -15,6 +15,7 @@
     var builder = WebApplication.CreateBuilder(args);
 
     Env.Load();
+    var token = Environment.GetEnvironmentVariable("TOKEN")  ?? "default_secret_key";
     builder.Services.AddOpenApi();
     builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=news.db"));
     builder.Services.AddControllers();
@@ -29,7 +30,7 @@
             ValidateAudience = true,
             ValidAudience = Environment.GetEnvironmentVariable("AUDIENCE"),
             ValidateLifetime = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("TOKEN"))),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(token)),
             ValidateIssuerSigningKey = true,
         };
     });
