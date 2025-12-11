@@ -133,8 +133,9 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
                                   },
                                 );
                               },
-                              error: (error, stack) =>
-                                  Center(child: Text('Error: $error')),
+                              error: (error, stack) => Center(
+                                child: Text('Error bookmarks: $error'),
+                              ),
                               loading: () => const Center(
                                 child: CircularProgressIndicator(),
                               ),
@@ -143,7 +144,7 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
                           return Text('');
                         },
                         error: (error, stack) =>
-                            Center(child: Text('Error: $error')),
+                            Center(child: Text('Error auth: $error')),
                         loading: () =>
                             const Center(child: CircularProgressIndicator()),
                       ),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
@@ -10,15 +11,24 @@ import 'package:news/models/news.dart';
 class NewsRepository extends Adapter {
   final WidgetRef ref;
   NewsRepository(this.ref);
-  final String baseUrl = "http://localhost:5287";
+  final String baseUrl = "http://10.0.2.2:5287";
+  final dio = Dio();
 
   @override
-  Future<List<News>> fetchNews(BuildContext context) async {
+  Future<List<News>> fetchNews(
+    BuildContext context,
+    int page,
+    int pageSize,
+  ) async {
     final String url = "$baseUrl/api/News/getallnews";
-    final response = await http.get(Uri.parse(url));
+    final response = await dio.get(
+      url,
+      queryParameters: {"page": page, "pageSize": pageSize},
+    );
+
     if (response.statusCode == 200) {
-      List<dynamic> jsonData = jsonDecode(response.body);
-      return jsonData.map((item) => News.fromJson(jsonEncode(item))).toList();
+      List<dynamic> jsonData = response.data;
+      return jsonData.map((item) => News.fromMap(item)).toList();
     } else {
       throw Exception("Failed to load news");
     }
@@ -27,9 +37,10 @@ class NewsRepository extends Adapter {
   @override
   Future<List<Category>> fetchCategories(BuildContext context) async {
     final String url = "$baseUrl/api/Category";
-    final response = await http.get(Uri.parse(url));
+
+    final response = await dio.get(url);
     if (response.statusCode == 200) {
-      List<dynamic> jsonData = jsonDecode(response.body);
+      List<dynamic> jsonData = response.data;
       return jsonData.map((item) => Category.fromMap(item)).toList();
     } else {
       throw Exception("Failed to load categories");
@@ -42,9 +53,9 @@ class NewsRepository extends Adapter {
     int categoryId,
   ) async {
     final String url = "$baseUrl/api/News/getNewsByCategory/$categoryId";
-    final response = await http.get(Uri.parse(url));
+    final response = await dio.get(url);
     if (response.statusCode == 200) {
-      List<dynamic> jsonData = jsonDecode(response.body);
+      List<dynamic> jsonData = response.data;
       return jsonData.map((item) => News.fromMap(item)).toList();
     } else {
       throw Exception("Failed to load news");
@@ -54,9 +65,9 @@ class NewsRepository extends Adapter {
   @override
   Future<List<News>> fetchByName(BuildContext context, String newName) async {
     final String url = "$baseUrl/api/News/search/$newName";
-    final response = await http.get(Uri.parse(url));
+    final response = await dio.get(url);
     if (response.statusCode == 200) {
-      List<dynamic> jsonData = jsonDecode(response.body);
+      List<dynamic> jsonData = response.data;
       return jsonData.map((item) => News.fromMap(item)).toList();
     } else {
       throw Exception("Failed to load news");
@@ -66,9 +77,9 @@ class NewsRepository extends Adapter {
   @override
   Future<String> fetchEditorName(BuildContext context, String editorId) async {
     final String url = "$baseUrl/api/News/getName/$editorId";
-    final response = await http.get(Uri.parse(url));
+    final response = await dio.get(url);
     if (response.statusCode == 200) {
-      String jsonData = response.body;
+      String jsonData = response.data;
 
       return jsonData;
     } else {

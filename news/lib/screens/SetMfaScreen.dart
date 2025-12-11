@@ -182,6 +182,143 @@ class _SetmfascreenState extends ConsumerState<Setmfascreen> {
                   ),
                 ),
               );
+            } else {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(top: 8.0, left: 36),
+                        child: Text("E-mail", style: TextStyle(fontSize: 18)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: TextFormField(
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Color.fromARGB(255, 85, 84, 84),
+                          ),
+                          controller: newEmailController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            fillColor: Colors.white,
+                            hoverColor: Colors.white,
+                            focusColor: Colors.white,
+                          ),
+
+                          validator: (value) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                !value.contains("@") ||
+                                !value.contains(".")) {
+                              return 'Please enter valid email';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 8.0, left: 36),
+                        child: Text("Password", style: TextStyle(fontSize: 18)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: TextFormField(
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Color.fromARGB(255, 85, 84, 84),
+                          ),
+                          controller: passController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+
+                            fillColor: Colors.white,
+                            hoverColor: Colors.white,
+                            focusColor: Colors.white,
+                          ),
+
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter valid password';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 10.0,
+                          left: 100,
+                          right: 100,
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (formKey.currentState!.validate()) {
+                              final val = await AuthRepository(ref).changeEmail(
+                                context,
+                                newEmailController.text,
+                                passController.text,
+                              );
+                              if (val == true) {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text("Mfa set"),
+                                      backgroundColor: Colors.red,
+                                      duration: Duration(seconds: 3),
+                                    ),
+                                  );
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ProfileScreen(),
+                                    ),
+                                  );
+                                }
+                              } else if (val == false) {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        "Password is wrong or email has user already.",
+                                      ),
+                                      backgroundColor: Colors.red,
+                                      duration: Duration(seconds: 3),
+                                    ),
+                                  );
+                                }
+                              } else {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text("error"),
+                                      backgroundColor: Colors.red,
+                                      duration: Duration(seconds: 3),
+                                    ),
+                                  );
+                                }
+                              }
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.purple,
+                            foregroundColor: Colors.white,
+                            fixedSize: const Size(500, 34),
+                          ),
+                          child: const Text(
+                            "Submit",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
             }
           },
           error: (error, stack) => Center(child: Text('Error: $error')),

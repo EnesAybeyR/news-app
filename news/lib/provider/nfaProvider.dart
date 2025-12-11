@@ -23,7 +23,9 @@ class Nfaprovider extends AsyncNotifier<bool> {
     state = const AsyncValue.loading();
     try {
       final nfa = await AuthRepository(ref).nfaWithId(ref);
+
       state = AsyncValue.data(nfa);
+
       return nfa;
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);

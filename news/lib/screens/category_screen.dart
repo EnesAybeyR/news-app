@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news/models/category.dart';
 import 'package:news/provider/newProviders/news_provider.dart';
 import 'package:news/screens/news_detail_screen.dart';
-import 'package:news/screens/news_detail_screen_alert.dart';
 import 'package:news/widgets/all_item_widget.dart';
 
 class CategoryScreen extends ConsumerStatefulWidget {

@@ -34,6 +34,7 @@ namespace newsApi.Controller
             {
                 return BadRequest("Username or password is wrong");
             }
+           
             return Ok(token);
         }
 
@@ -126,7 +127,7 @@ namespace newsApi.Controller
             }
             if (response == false)
             {
-                return BadRequest(false);
+                return Ok(false);
             }
             return Ok(true);
         }

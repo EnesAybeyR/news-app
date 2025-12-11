@@ -10,7 +10,7 @@ public interface INewsService
     Task<News?> CreateNew(NewsDto request, Guid EditorId);
     Task<bool> DeleteNew(Guid newId);
 
-    Task<List<News>> GetNewsAsync();
+    Task<List<News>> GetNewsAsync(int page =1, int pageSize = 10);
     Task<List<News>> GetNewsByCategoryAsync(int CategoryId);
 
     Task<String> GetEditorNameAsync(Guid EditorId);

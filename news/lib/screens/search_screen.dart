@@ -47,12 +47,17 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         width: MediaQuery.sizeOf(context).width,
         child: Column(
           children: [
+            SizedBox(height: 16),
             Padding(
               padding: EdgeInsetsGeometry.directional(start: 8, end: 8),
               child: TextFormField(
                 controller: controller,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
+                  hint: Text("Search"),
+                  suffixIcon: const Icon(Icons.search_sharp),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(30)),
+                  ),
                   fillColor: Colors.white,
                   hoverColor: Colors.white,
                   focusColor: Colors.white,

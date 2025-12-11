@@ -14,7 +14,7 @@ namespace newsApi.Controllers
     {
         [HttpPost]
         [Authorize(Roles = "Editor,Admin")]
-        public async Task<ActionResult<News>> CreateNews(NewsDto request)
+        public async Task<ActionResult<News>> CreateNews([FromBody]NewsDto request)
         {
             var adminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (adminId == null)
@@ -41,9 +41,9 @@ namespace newsApi.Controllers
         }
 
         [HttpGet("getallnews")]
-        public async Task<ActionResult<List<News>>> GetAllNews()
+        public async Task<ActionResult<List<News>>> GetAllNews([FromQuery]int page = 1,[FromQuery]int pageSize = 10)
         {
-            var result = await newsService.GetNewsAsync();
+            var result = await newsService.GetNewsAsync(page, pageSize);
             return Ok(result);
         }
         [HttpGet("getNewsByCategory/{id}")]
@@ -112,7 +112,7 @@ namespace newsApi.Controllers
             var result = await newsService.CreateBookMarkAsync(userBookmark);
             return Ok();
         }
-        [HttpPost("bookmarks/delete/{id}")]
+        [HttpDelete("bookmarks/delete/{id}")]
         [Authorize(Roles = "user")]
         public async Task<ActionResult> DeleteBookmark(string id)
         {

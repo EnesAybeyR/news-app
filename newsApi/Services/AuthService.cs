@@ -188,13 +188,14 @@ namespace newsApi.Services
                 new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
                 new Claim(ClaimTypes.Role,user.Role)
             };
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("AppSettings:Token")!));
+            var secret = Environment.GetEnvironmentVariable("TOKEN");
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
             var tokenDescriptor = new JwtSecurityToken(
-                issuer: configuration.GetValue<string>("AppSettings:Issuer"),
-                audience: configuration.GetValue<string>("AppSettings:Audience"),
+                issuer: Environment.GetEnvironmentVariable("ISSUER"),
+                audience: Environment.GetEnvironmentVariable("AUDIENCE"),
                 claims: claims,
                 expires: DateTime.UtcNow.AddDays(1),
                 signingCredentials: creds

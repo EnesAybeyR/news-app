@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news/Repository/bookmark_adapter.dart';
 
@@ -10,15 +11,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 class BookmarkRepo extends BookmarkAdapter {
   final WidgetRef ref;
   BookmarkRepo(this.ref);
-  final String baseUrl = "http://localhost:5287";
+  final String baseUrl = "http://10.0.2.2:5287";
+  final dio = Dio();
   @override
   Future<bool> addBookmarks(ref, String newId) async {
     final String url = '$baseUrl/api/News/bookmarks/add/$newId';
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString("accessToken");
-    final response = await http.post(
-      Uri.parse(url),
-      headers: {"Authorization": "Bearer $token"},
+    final response = await dio.post(
+      url,
+      options: Options(
+        contentType: "application/json",
+        headers: {"Authorization": "Bearer $token"},
+      ),
     );
     if (response.statusCode == 200) {
       return true;
@@ -32,10 +37,11 @@ class BookmarkRepo extends BookmarkAdapter {
     final String url = '$baseUrl/api/News/bookmarks/delete/$bookmarkId';
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString("accessToken");
-    final response = await http.post(
-      Uri.parse(url),
-      headers: {"Authorization": "Bearer $token"},
+    final response = await dio.delete(
+      url,
+      options: Options(headers: {"Authorization": "Bearer $token"}),
     );
+
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -49,12 +55,16 @@ class BookmarkRepo extends BookmarkAdapter {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString("accessToken");
     try {
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {'Authorization': 'Bearer $token'},
+      final response = await dio.get(
+        url,
+        options: Options(headers: {"Authorization": "Bearer $token"}),
       );
+
       if (response.statusCode == 200) {
-        List<dynamic> jsonData = jsonDecode(response.body);
+        List<dynamic> jsonData = response.data;
+        if (jsonData == [] || jsonData == null || jsonData is! List) {
+          return [];
+        }
 
         return jsonData.map((item) => Bookmarks.fromMap(item)).toList();
       } else {

@@ -16,7 +16,7 @@ class _NewsAppState extends ConsumerState<NewsApp> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(authProviderNotifier.notifier).refreshToken(ref);
+      ref.read(authProviderNotifier.notifier).RefreshToken(ref);
       ref.read(bookmarkprovider.notifier).fetchBookmarks(ref);
     });
   }

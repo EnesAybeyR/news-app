@@ -24,12 +24,15 @@ class _NfaverifyscreenState extends ConsumerState<Nfaverifyscreen> {
   String currentText = "";
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(authProviderNotifier);
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 240, 238, 242),
       appBar: AppBar(title: Text("Verify"), centerTitle: true),
       body: Container(
         child: Column(
           children: [
+            if (state.isLoading) CircularProgressIndicator(),
+
             const Text(
               "Enter the 6 digit code sent to your email address",
               style: TextStyle(fontSize: 18),
@@ -79,24 +82,42 @@ class _NfaverifyscreenState extends ConsumerState<Nfaverifyscreen> {
                   ),
                 ],
                 onCompleted: (v) async {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(v),
+                      backgroundColor: Colors.red,
+                      duration: Duration(seconds: 3),
+                    ),
+                  );
                   try {
                     final x = await ref
                         .read(authProviderNotifier.notifier)
-                        .nfaLogin(
-                          ref,
-                          widget.username,
-                          widget.password,
-                          currentText,
-                        );
+                        .nfaLogin(ref, widget.username, widget.password, v);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(x.toString()),
+                        backgroundColor: Colors.red,
+                        duration: Duration(seconds: 3),
+                      ),
+                    );
                     if (x == true) {
                       if (context.mounted) {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder: (context) => ProfileScreen(),
                           ),
                         );
                       }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("true donmuyo men"),
+                          backgroundColor: Colors.red,
+                          duration: Duration(seconds: 3),
+                        ),
+                      );
                     }
                   } catch (e) {
                     throw Exception(e);

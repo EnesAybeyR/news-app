@@ -1,5 +1,5 @@
-@newsApi_HostAddress = http://localhost:8080
-
+# @newsApi_HostAddress = http://localhost:8080
+@newsApi_HostAddress = http://localhost:5287
 GET {{newsApi_HostAddress}}/weatherforecast/
 Accept: application/json
 
@@ -7,21 +7,132 @@ Accept: application/json
 GET {{newsApi_HostAddress}}/api/category
 
 ###
-POST {{newsApi_HostAddress}}/api/category
+
+POST {{newsApi_HostAddress}}/api/auth/user/login
 Content-Type: application/json
 
 {
-    "CategoryName": "Business"
+    "UserName": "kral1",
+    "Password": "12345678"
 }
 
 ###
-POST {{newsApi_HostAddress}}/api/Auth/user/nfa
+POST {{newsApi_HostAddress}}/api/auth/admin/login
 Content-Type: application/json
 
 {
-    "UserName": "MemedoSaid",
-    "Password": "123"
+    "UserName": "Emre",
+    "Password": "emre123"
 }
+###
+GET {{newsApi_HostAddress}}/api/Auth/user/mail
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoia3JhbDEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjFlZjBhOGY1LTVjMjgtNGQ1Mi1hNjdhLWE0YTA0M2IwZjFkZCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6InVzZXIiLCJleHAiOjE3NjU1MTk0NDd9.0hLwyO6dml5j0obE-7GEcFk1xFQNWyyqgTKIHC5kpywLE-ihQY3YEhZnCiuWrUn0ZZnC_6BA12tS54gdEg5V2Q
 
 ###
 GET https://newsapi.org/v2/everything?q=keyword&apiKey=1440037de64546039059454bedb3d865
+
+//admin
+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRW1yZSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDE2NGE3MWMtY2I4Ni00MjczLWFmYzItNmM0OWM5YTg0MzAzIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJleHAiOjE3NjU1MzkyMjMsImlzcyI6Ik15QXdlc29tZUFwcCIsImF1ZCI6Ik15QXdlc29tZUF1ZGllbmNlIn0.OOBrbGljD_2CEankjTs_PbhZRfwDv4cazYMBqtT9hpfhnhzLZhfD37nAoA8Tu_WpQFhGWbRkbBeEdaYtv_dfzA
+
+
+###
+POST {{newsApi_HostAddress}}/api/news
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRW1yZSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNDE2NGE3MWMtY2I4Ni00MjczLWFmYzItNmM0OWM5YTg0MzAzIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJleHAiOjE3NjU1MzkyMjMsImlzcyI6Ik15QXdlc29tZUFwcCIsImF1ZCI6Ik15QXdlc29tZUF1ZGllbmNlIn0.OOBrbGljD_2CEankjTs_PbhZRfwDv4cazYMBqtT9hpfhnhzLZhfD37nAoA8Tu_WpQFhGWbRkbBeEdaYtv_dfzA
+{
+        "id": "f05c1ae9-fd80-4929-b6fe-26e651b25966",
+        "headline": "Agents turn simple keyword search into compelling search experiences",
+        "createDate": "2025-09-25T09:10:18.6928552",
+        "countryName": "Turkey",
+        "entryCount": 1,
+        "editorId": "7af916a3-9521-4637-98e9-10c602c5ab3d",
+        "categoryId": 5,
+        "newsContents": [
+            {
+                "id": "005c8043-9a67-407b-97cc-1aa7e9197a07",
+                "content": "Instead of a big, complex search system, I tell the agent about this dumb thing it can use to search. It then applies its own intelligence to use the tool correctly.",
+                "order": 9,
+                "contentType": "explanation",
+                "newId": "f05c1ae9-fd80-4929-b6fe-26e651b25966"
+            },
+            {
+                "id": "0aec7bd0-6751-4beb-bce2-51dfb15edb2e",
+                "content": "Because of this, I’d argue the traditional, thick search APIs are counterproductive to being used by agents. They may be too complex for agents to reason about effectively.",
+                "order": 6,
+                "contentType": "explanation",
+                "newId": "f05c1ae9-fd80-4929-b6fe-26e651b25966"
+            },
+            {
+                "id": "0c100b98-0a10-41ed-9b32-6001fd172440",
+                "content": "So lately, I’ve tried a rather stupid search backend. More like this image:",
+                "order": 7,
+                "contentType": "explanation",
+                "newId": "f05c1ae9-fd80-4929-b6fe-26e651b25966"
+            },
+            {
+                "id": "1e1871eb-fc31-4024-a1da-4a16370fd65a",
+                "content": "Helping the agent remember as it goes",
+                "order": 10,
+                "contentType": "subheader",
+                "newId": "f05c1ae9-fd80-4929-b6fe-26e651b25966"
+            },
+            {
+                "id": "349ee67d-28a1-4b1e-94e6-f2e5384093de",
+                "content": "The agent can track how well a tool call works as it goes. In my code, the agent stores its evaluation of each tool’s results. Essentially “LLM-as-a-judge as you go”. The next time a search happens, the agent can recall what it liked / didn’t like last time.",
+                "order": 11,
+                "contentType": "explanation",
+                "newId": "f05c1ae9-fd80-4929-b6fe-26e651b25966"
+            },
+            {
+                "id": "5bd39416-12fd-4c30-96de-153b3044f78d",
+                "content": "Agents, however, come with the ability to reason. And like human users, they might try a query, see the results, adjust their query, and zero-in on the best search terms to find what they want.",
+                "order": 4,
+                "contentType": "explanation",
+                "newId": "f05c1ae9-fd80-4929-b6fe-26e651b25966"
+            },
+            {
+                "id": "ad84a272-425e-4e56-ad05-9f5e80d272cb",
+                "content": "With small modifications (chunking, a focus on vector retrieval) the RAG implementations look familiar.",
+                "order": 3,
+                "contentType": "explanation",
+                "newId": "f05c1ae9-fd80-4929-b6fe-26e651b25966"
+            },
+            {
+                "id": "c26650d9-55ce-4dda-8aa0-a6d7bbf37d31",
+                "content": "Like human users, the agent can build a “mental model” of how the search tool works. If there’s a clear, predictable correspondence between stimulus and output, the agent will figure it out. However, a large, complex system might not be as transparent.",
+                "order": 5,
+                "contentType": "explanation",
+                "newId": "f05c1ae9-fd80-4929-b6fe-26e651b25966"
+            },
+            {
+                "id": "e2eaecf7-d1ef-49b7-9d84-1483a5e14fe7",
+                "content": "A traditional RAG system often looks like the search we’ve built for years. An LLM calls a search API. We have query understanding and reranking functionality under the hood. All optimized for user engagement.",
+                "order": 2,
+                "contentType": "explanation",
+                "newId": "f05c1ae9-fd80-4929-b6fe-26e651b25966"
+            }
+        ],
+        "images": [
+            {
+                "id": "733987b7-42da-47ca-97ab-e706b6f9d150",
+                "imageName": "image",
+                "imagePath": "https://picsum.photos/1920/1080",
+                "alt": "image",
+                "order": 1,
+                "newId": "f05c1ae9-fd80-4929-b6fe-26e651b25966"
+            },
+            {
+                "id": "dc55750f-79fc-48ea-b109-907ba82835f5",
+                "imageName": "image1",
+                "imagePath": "https://picsum.photos/1919/1080",
+                "alt": "image",
+                "order": 8,
+                "newId": "f05c1ae9-fd80-4929-b6fe-26e651b25966"
+            }
+        ]
+}
+
+
+
+

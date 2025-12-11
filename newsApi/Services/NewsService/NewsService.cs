@@ -58,9 +58,9 @@ public class NewsService(AppDbContext context) : INewsService
         return true;
 
     }
-    public async Task<List<News>> GetNewsAsync()
+    public async Task<List<News>> GetNewsAsync(int page =1, int pageSize = 10)
     {
-        var news = await context.News.Include(c => c.Images).Include(c => c.NewsContents).ToListAsync();
+        var news = await context.News.Include(c => c.Images).Include(c => c.NewsContents).OrderByDescending(x=> x.CreateDate).Skip((page-1)*pageSize).Take(pageSize).ToListAsync();
         return news;
     }
 

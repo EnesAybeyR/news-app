@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news/Repository/auth_repository.dart';
 import 'package:news/models/authState.dart';
@@ -8,11 +7,27 @@ class Authprovider extends AsyncNotifier<AuthState> {
   @override
   Future<AuthState> build() async {
     final prefs = await SharedPreferences.getInstance();
+    final isLogged = prefs.getBool("isLogged") ?? false;
+    if (isLogged) {
+      final accessToken = prefs.getString("accessToken");
+      final refreshToken = prefs.getString("refreshToken");
+      final userId = prefs.getString("userId");
+
+      if (refreshToken != null && userId != null) {
+        try {
+          await RefreshToken(ref);
+          return state.value as AuthState;
+        } catch (e) {
+          await logout();
+          return const AuthState(isLogged: false);
+        }
+      }
+    }
     return AuthState(
       accessToken: prefs.getString("accessToken"),
       refreshToken: prefs.getString("refreshToken"),
       userId: prefs.getString("userId"),
-      isLogged: prefs.getBool("isLogged") ?? false,
+      isLogged: isLogged,
     );
   }
 
@@ -48,9 +63,6 @@ class Authprovider extends AsyncNotifier<AuthState> {
       final token = await AuthRepository(
         ref,
       ).nfaLogin(ref, username, password, code);
-      if (token.accessToken == null) {
-        return false;
-      }
       final newState = AuthState(
         accessToken: token.accessToken,
         refreshToken: token.refreshToken,
@@ -92,23 +104,31 @@ class Authprovider extends AsyncNotifier<AuthState> {
     state = AsyncData(const AuthState(isLogged: false));
   }
 
-  Future<void> refreshToken(ref) async {
+  Future<void> RefreshToken(ref) async {
     state = const AsyncValue.loading();
     final prefs = await SharedPreferences.getInstance();
+
     final userId = prefs.getString("userId");
-    final refreshToken = prefs.getString("refreshToken");
+    final refreshTokenString = prefs.getString("refreshToken");
+
+    if (userId == null || refreshTokenString == null) {
+      await logout();
+      return;
+    }
 
     try {
       final token = await AuthRepository(
         ref,
-      ).refreshToken(ref, userId.toString(), refreshToken.toString());
+      ).refreshToken(ref, userId, refreshTokenString);
+
       if (token == null) {
-        logout();
+        await logout();
       } else {
         await prefs.setString("accessToken", token.accessToken.toString());
         await prefs.setString("refreshToken", token.refreshToken.toString());
         await prefs.setString("userId", token.userId.toString());
         await prefs.setBool("isLogged", true);
+
         final newState = AuthState(
           accessToken: token.accessToken,
           refreshToken: token.refreshToken,
@@ -118,8 +138,8 @@ class Authprovider extends AsyncNotifier<AuthState> {
 
         state = AsyncData(newState);
       }
-    } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace);
+    } catch (error) {
+      await logout();
     }
   }
 }
