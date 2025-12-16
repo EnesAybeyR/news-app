@@ -1,10 +1,6 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news/Repository/bookmark_adapter.dart';
-
-import 'package:http/http.dart' as http;
 import 'package:news/models/bookmarks.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -62,7 +58,7 @@ class BookmarkRepo extends BookmarkAdapter {
 
       if (response.statusCode == 200) {
         List<dynamic> jsonData = response.data;
-        if (jsonData == [] || jsonData == null || jsonData is! List) {
+        if (jsonData == []) {
           return [];
         }
 
@@ -72,6 +68,8 @@ class BookmarkRepo extends BookmarkAdapter {
           'Failed to load bookmarks. Status: ${response.statusCode}',
         );
       }
+    } on DioException catch (e) {
+      throw Exception("${e.response?.data}");
     } catch (e) {
       throw Exception('Network or processing error: $e');
     }

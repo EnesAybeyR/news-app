@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
 import 'package:news/Repository/adapter.dart';
 import 'package:news/models/category.dart';
 import 'package:news/models/news.dart';

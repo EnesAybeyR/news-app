@@ -15,7 +15,7 @@
     var builder = WebApplication.CreateBuilder(args);
 
     Env.Load();
-    var token = Environment.GetEnvironmentVariable("TOKEN")  ?? "default_secret_key";
+    var token = Environment.GetEnvironmentVariable("TOKEN");
     builder.Services.AddOpenApi();
     builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=news.db"));
     builder.Services.AddControllers();

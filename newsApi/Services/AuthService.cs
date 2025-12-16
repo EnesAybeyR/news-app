@@ -97,18 +97,18 @@ namespace newsApi.Services
             };
             return response;
         }
-        public async Task<TokenResponseDto?> UserLoginAsyncWithNfa(UserDto request)
+        public async Task<bool> UserLoginAsyncWithNfa(UserDto request)
         {
             var user = await context.Users.FirstOrDefaultAsync(a => a.UserName == request.UserName);
             if (user == null)
             {
-                return null;
+                return false;
             }
             if (new PasswordHasher<User>().VerifyHashedPassword(user, user.HashedPassword, request.Password) == PasswordVerificationResult.Failed)
             {
-                return null;
+                return false;
             }
-            return null;
+            return true;
         }
         
         public async Task<bool?> UpdateUserMail(string mail,Guid userId,string password)

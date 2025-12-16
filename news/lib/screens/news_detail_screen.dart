@@ -83,7 +83,7 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                   ),
                   SizedBox(height: 8),
-                  Text(remain, style: TextStyle(fontSize: 12)),
+                  Text(remain, style: TextStyle(fontSize: 13)),
                   SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -95,7 +95,7 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
                           }
                           return Text(
                             data.toString(),
-                            style: TextStyle(fontSize: 12),
+                            style: TextStyle(fontSize: 14),
                           );
                         },
                         error: (error, stack) =>

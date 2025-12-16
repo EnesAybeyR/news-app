@@ -54,7 +54,13 @@ namespace newsApi.Controller
         [HttpPost("user/nfa")]
         public async Task<ActionResult<bool>> IsNfa(UserDto request)
         {
+            var isUserValid = await authService.UserLoginAsyncWithNfa(request);
+            if(isUserValid == false)
+            {
+                return Ok(false);       
+            }
             var isNfa = await authService.IsNfaActive(request.UserName);
+            
             return Ok(isNfa);
         }
 
@@ -145,3 +151,4 @@ namespace newsApi.Controller
         }
     }
 }
+

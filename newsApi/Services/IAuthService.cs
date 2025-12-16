@@ -15,7 +15,7 @@ public interface IAuthService
     Task<bool?> UpdateUserMail(string mail, Guid userId, string password);
     Task<TokenResponseDto?> UserLoginAsync(UserDto request);
 
-    Task<TokenResponseDto?> UserLoginAsyncWithNfa(UserDto request);
+    Task<bool> UserLoginAsyncWithNfa(UserDto request);
 
     Task<bool?> VerifyLoginCodeAsync(string username,string code);
 

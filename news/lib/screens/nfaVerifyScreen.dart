@@ -28,6 +28,7 @@ class _NfaverifyscreenState extends ConsumerState<Nfaverifyscreen> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 240, 238, 242),
       appBar: AppBar(title: Text("Verify"), centerTitle: true),
+      // ignore: avoid_unnecessary_containers
       body: Container(
         child: Column(
           children: [

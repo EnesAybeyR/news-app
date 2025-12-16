@@ -65,7 +65,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 decoration: BoxDecoration(color: col),
                 height: 30,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                   child: categories.when(
                     data: (newCategories) {
                       return ListView.builder(
@@ -102,7 +102,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 ),
                               ),
                               if (index != newCategories.length - 1)
-                                Text(' | '),
+                                Text('  |  '),
                             ],
                           );
                         },

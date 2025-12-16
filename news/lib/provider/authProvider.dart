@@ -9,7 +9,7 @@ class Authprovider extends AsyncNotifier<AuthState> {
     final prefs = await SharedPreferences.getInstance();
     final isLogged = prefs.getBool("isLogged") ?? false;
     if (isLogged) {
-      final accessToken = prefs.getString("accessToken");
+      //final accessToken = prefs.getString("accessToken");
       final refreshToken = prefs.getString("refreshToken");
       final userId = prefs.getString("userId");
 

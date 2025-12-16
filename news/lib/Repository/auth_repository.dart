@@ -1,11 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
-
 import 'package:news/Repository/auth_adapter.dart';
 import 'package:news/models/token.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,26 +11,6 @@ class AuthRepository extends AuthAdapter {
   final String baseUrl = "http://10.0.2.2:5287";
   final dio = Dio();
 
-  @override
-  // Future<Token> login(ref, String username, String password) async {
-  //   final String url = "$baseUrl/api/auth/user/login";
-  //   try {
-  //     final response = await dio.post(
-  //       url,
-  //       data: {"userName": username, "password": password},
-  //       options: Options(contentType: "application/json"),
-  //     );
-  //     if (response.statusCode == 200) {
-  //       Token token = Token.fromJson(response.data);
-  //       return token;
-  //     } else if (response.statusCode == 400) {
-  //       throw Exception("bad req");
-  //     }
-  //     throw Exception();
-  //   } catch (e) {
-  //     throw Exception("aaaaaaa");
-  //   }
-  // }
   @override
   Future<Token> login(ref, String username, String password) async {
     final String url = "$baseUrl/api/auth/user/login";
@@ -55,9 +30,7 @@ class AuthRepository extends AuthAdapter {
     } on DioException catch (e) {
       // --- HATAYI GÖRMEK İÇİN BURASI ÖNEMLİ ---
       if (e.response != null) {
-        throw Exception(
-          "Sunucu Hatası (${e.response?.statusCode}): ${e.response?.data}",
-        );
+        throw Exception("${e.response?.data}");
       } else {
         throw Exception("Sunucuya ulaşılamadı");
       }
@@ -84,7 +57,10 @@ class AuthRepository extends AuthAdapter {
         Token token = Token.fromMap(response.data);
         return token;
       }
+
       throw Exception();
+    } on DioException catch (e) {
+      throw Exception("${e.response?.data}");
     } catch (e) {
       throw Exception(e);
     }
@@ -104,10 +80,10 @@ class AuthRepository extends AuthAdapter {
         Token token = Token.fromJson(response.data);
 
         return token;
-      } else if (response.statusCode == 400) {
-        throw Exception();
       }
       throw Exception();
+    } on DioException catch (e) {
+      throw Exception("${e.response?.data}");
     } catch (e) {
       throw Exception(e);
     }
@@ -127,6 +103,8 @@ class AuthRepository extends AuthAdapter {
         return response.data;
       }
       throw Exception();
+    } on DioException catch (e) {
+      throw Exception("${e.response?.data}");
     } catch (e) {
       throw Exception();
     }
@@ -149,8 +127,9 @@ class AuthRepository extends AuthAdapter {
       if (response.statusCode == 200) {
         return response.data;
       }
-
       return false;
+    } on DioException catch (e) {
+      throw Exception("${e.response?.data}");
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -173,6 +152,8 @@ class AuthRepository extends AuthAdapter {
       } else {
         return null;
       }
+    } on DioException catch (e) {
+      throw Exception("${e.response?.data}");
     } catch (e) {
       throw Exception(e);
     }
@@ -201,6 +182,8 @@ class AuthRepository extends AuthAdapter {
       } else {
         return false;
       }
+    } on DioException catch (e) {
+      throw Exception("${e.response?.data}");
     } catch (e) {
       throw Exception();
     }

@@ -118,7 +118,7 @@ namespace newsApi.Controllers
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
-            {
+            { 
                 return BadRequest("You should sign in");
             }
 
